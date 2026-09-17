@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "docugen-ai"
+version = "0.1.0"
+description = "Production-grade, local-first document intelligence and generation framework"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "DocuGen AI Team", email = "maintainers@docugen.ai" }
+]
+keywords = ["document", "generation", "pdf", "docx", "templates", "schema", "clauses", "contracts", "invoices"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: General",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pydantic>=2.0",
+    "jinja2>=3.1.0",
+    "python-docx>=1.0.0",
+    "reportlab>=4.0.0",
+    "pillow>=9.0.0",
+]
+
+[project.optional-dependencies]
+ml = [
+    "scikit-learn>=1.2.0",
+]
+nlp = [
+    "spacy>=3.5.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "build>=1.0.0",
+    "wheel",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+docugen = "docugen.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/docugen-ai/docugen"
+Documentation = "https://github.com/docugen-ai/docugen#readme"
+Repository = "https://github.com/docugen-ai/docugen.git"
+Issues = "https://github.com/docugen-ai/docugen/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+docugen = [
+    "templates/builtins/**/*.json",
+    "templates/builtins/**/*.j2",
+    "templates/builtins/**/*.txt",
+    "templates/builtins/**/*.docx",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
