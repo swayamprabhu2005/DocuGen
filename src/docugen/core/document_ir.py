@@ -163,6 +163,7 @@ class SignatureBlock(BaseModel):
 
 class PageBreak(BaseModel):
     """Explicit page break."""
+
     pass
 
 

@@ -16,6 +16,7 @@ class DocuGenError(Exception):
 
 class SchemaError(DocuGenError):
     """Raised when schema validation or resolution fails."""
+
     pass
 
 
@@ -34,26 +35,31 @@ class ValidationError(DocuGenError):
 
 class TemplateError(DocuGenError):
     """Raised when a template cannot be found, loaded, or rendered."""
+
     pass
 
 
 class TemplateNotFoundError(TemplateError):
     """Raised when a requested template does not exist."""
+
     pass
 
 
 class RenderingError(DocuGenError):
     """Raised when document rendering (PDF/DOCX) fails."""
+
     pass
 
 
 class ConfigurationError(DocuGenError):
     """Raised when invalid library configuration is provided."""
+
     pass
 
 
 class ClassificationError(DocuGenError):
     """Raised when document type classification fails or is ambiguous."""
+
     pass
 
 
@@ -72,14 +78,17 @@ class AmbiguousDocumentTypeError(ClassificationError):
 
 class PluginError(DocuGenError):
     """Raised when a plugin fails registration or execution."""
+
     pass
 
 
 class ClauseError(DocuGenError):
     """Raised when clause resolution, dependency check, or evaluation fails."""
+
     pass
 
 
 class AdapterError(DocuGenError):
     """Raised when an input adapter cannot parse the source data."""
+
     pass

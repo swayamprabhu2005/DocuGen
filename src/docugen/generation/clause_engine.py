@@ -72,13 +72,9 @@ class ClauseEngine:
             tmpl = self._jinja_env.from_string(clause.template_text)
             return tmpl.render(**data).strip()
         except jinja2.TemplateError as exc:
-            raise ClauseError(
-                f"Failed to render clause '{clause_id}': {exc}"
-            ) from exc
+            raise ClauseError(f"Failed to render clause '{clause_id}': {exc}") from exc
 
-    def resolve_clauses_for_document(
-        self, document_type: str, data: Dict[str, Any]
-    ) -> List[ClauseIR]:
+    def resolve_clauses_for_document(self, document_type: str, data: Dict[str, Any]) -> List[ClauseIR]:
         """Resolve, sort, and render all applicable clauses for a document.
 
         Args:
@@ -101,9 +97,7 @@ class ClauseEngine:
         for clause in applicable_clauses:
             for dep in clause.dependencies:
                 if dep not in selected_ids:
-                    raise ClauseError(
-                        f"Clause '{clause.clause_id}' depends on '{dep}', which is not included."
-                    )
+                    raise ClauseError(f"Clause '{clause.clause_id}' depends on '{dep}', which is not included.")
 
         # Sort by priority then clause_id
         applicable_clauses.sort(key=lambda c: (c.priority, c.clause_id))
@@ -112,11 +106,7 @@ class ClauseEngine:
         for idx, clause in enumerate(applicable_clauses, start=1):
             rendered_text = self.render_clause_text(clause.clause_id, data)
             # Break rendered text into paragraphs
-            paragraphs = [
-                Paragraph.from_text(p.strip())
-                for p in rendered_text.split("\n\n")
-                if p.strip()
-            ]
+            paragraphs = [Paragraph.from_text(p.strip()) for p in rendered_text.split("\n\n") if p.strip()]
             results.append(
                 ClauseIR(
                     clause_id=clause.clause_id,

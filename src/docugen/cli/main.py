@@ -86,7 +86,7 @@ def main(args: Optional[Sequence[str]] = None) -> int:
                 dry_run=parsed.dry_run,
             )
             if res.success:
-                print(f"[OK] Document generated successfully:")
+                print("[OK] Document generated successfully:")
                 print(f"  Type:   {res.document_type}")
                 print(f"  Format: {res.output_format}")
                 print(f"  Output: {res.output_path or '(dry run)'}")

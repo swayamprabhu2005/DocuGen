@@ -25,20 +25,16 @@ def _make_offer_letter_schema():
         description="Formal employment offer letter",
         fields={
             "candidate_name": FieldDefinition(
-                name="candidate_name", type=FieldType.STRING, required=True,
-                description="Candidate full name"
+                name="candidate_name", type=FieldType.STRING, required=True, description="Candidate full name"
             ),
             "position": FieldDefinition(
-                name="position", type=FieldType.STRING, required=True,
-                description="Job title being offered"
+                name="position", type=FieldType.STRING, required=True, description="Job title being offered"
             ),
             "base_salary": FieldDefinition(
-                name="base_salary", type=FieldType.NUMBER, required=True,
-                minimum=0.0, description="Annual base salary"
+                name="base_salary", type=FieldType.NUMBER, required=True, minimum=0.0, description="Annual base salary"
             ),
             "start_date": FieldDefinition(
-                name="start_date", type=FieldType.DATE, required=True,
-                description="Proposed start date"
+                name="start_date", type=FieldType.DATE, required=True, description="Proposed start date"
             ),
         },
     )
@@ -156,6 +152,7 @@ def test_custom_clause_in_document_type(temp_output_dir):
 
     def compose_deed(data, template):
         from docugen.generation.clause_engine import get_clause_engine
+
         clauses = get_clause_engine().resolve_clauses_for_document("partnership_deed", data)
         return Document(
             metadata=DocumentMetadata(title="Partnership Deed", document_type="partnership_deed"),

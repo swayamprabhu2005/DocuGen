@@ -8,9 +8,7 @@ from docugen.core.models import ValidationResult
 from docugen.core.schemas import DocumentSchema, FieldDefinition, FieldType
 
 
-def check_field_rules(
-    data: Dict[str, Any], schema: DocumentSchema, result: ValidationResult
-) -> None:
+def check_field_rules(data: Dict[str, Any], schema: DocumentSchema, result: ValidationResult) -> None:
     """Validate each present field against its defined schema rules."""
     for field_name, field_def in schema.fields.items():
         if field_name not in data or data[field_name] is None:
@@ -20,9 +18,7 @@ def check_field_rules(
         _validate_single_field(field_name, field_def, value, result)
 
 
-def _validate_single_field(
-    field_name: str, field_def: FieldDefinition, value: Any, result: ValidationResult
-) -> None:
+def _validate_single_field(field_name: str, field_def: FieldDefinition, value: Any, result: ValidationResult) -> None:
     """Validate a single field against its definition."""
     # 1. Type validation
     if field_def.type == FieldType.STRING:

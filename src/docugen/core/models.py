@@ -12,9 +12,7 @@ class Diagnostic(BaseModel):
     """Structured diagnostic reporting validation errors, warnings, or inconsistencies."""
 
     code: str = Field(..., description="Machine-readable error/warning code")
-    severity: Literal["error", "warning", "info"] = Field(
-        default="error", description="Diagnostic severity level"
-    )
+    severity: Literal["error", "warning", "info"] = Field(default="error", description="Diagnostic severity level")
     field: Optional[str] = Field(default=None, description="Field associated with the diagnostic")
     message: str = Field(..., description="Human-readable diagnostic message")
     context: Dict[str, Any] = Field(default_factory=dict, description="Diagnostic context metadata")
@@ -34,13 +32,15 @@ class ValidationResult(BaseModel):
     )
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
-    def add_error(self, code: str, message: str, field: Optional[str] = None, context: Optional[Dict[str, Any]] = None) -> None:
+    def add_error(
+        self, code: str, message: str, field: Optional[str] = None, context: Optional[Dict[str, Any]] = None
+    ) -> None:
         self.valid = False
-        self.errors.append(
-            Diagnostic(code=code, severity="error", field=field, message=message, context=context or {})
-        )
+        self.errors.append(Diagnostic(code=code, severity="error", field=field, message=message, context=context or {}))
 
-    def add_warning(self, code: str, message: str, field: Optional[str] = None, context: Optional[Dict[str, Any]] = None) -> None:
+    def add_warning(
+        self, code: str, message: str, field: Optional[str] = None, context: Optional[Dict[str, Any]] = None
+    ) -> None:
         self.warnings.append(
             Diagnostic(code=code, severity="warning", field=field, message=message, context=context or {})
         )
@@ -50,9 +50,7 @@ class ValidationResult(BaseModel):
         if field_name not in self.missing_fields:
             self.missing_fields.append(field_name)
         msg = message or f"Missing required field: '{field_name}'"
-        self.errors.append(
-            Diagnostic(code="MISSING_REQUIRED_FIELD", severity="error", field=field_name, message=msg)
-        )
+        self.errors.append(Diagnostic(code="MISSING_REQUIRED_FIELD", severity="error", field=field_name, message=msg))
 
 
 class ClassificationResult(BaseModel):

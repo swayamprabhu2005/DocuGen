@@ -14,7 +14,15 @@ from docugen.core.exceptions import SchemaError
 
 def test_schema_registry_has_builtin_schemas():
     types = list_document_types()
-    for name in ["employment_contract", "nda", "invoice", "quotation", "business_report", "certificate", "service_agreement"]:
+    for name in [
+        "employment_contract",
+        "nda",
+        "invoice",
+        "quotation",
+        "business_report",
+        "certificate",
+        "service_agreement",
+    ]:
         assert name in types, f"{name} not found in registered schemas"
 
 

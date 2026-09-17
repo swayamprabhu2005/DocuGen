@@ -13,18 +13,18 @@ class DocumentFormatting(BaseModel):
     orientation: Literal["portrait", "landscape"] = "portrait"
 
     # Margins in points (72 points = 1 inch)
-    margin_top: float = 54.0     # 0.75 in
+    margin_top: float = 54.0  # 0.75 in
     margin_bottom: float = 54.0  # 0.75 in
-    margin_left: float = 54.0    # 0.75 in
-    margin_right: float = 54.0   # 0.75 in
+    margin_left: float = 54.0  # 0.75 in
+    margin_right: float = 54.0  # 0.75 in
 
     # Typography
     font_family: str = "Helvetica"
     heading_font_family: str = "Helvetica-Bold"
-    primary_color: str = "#1E3A8A"     # Deep corporate blue
-    secondary_color: str = "#4B5563"   # Slate gray
-    text_color: str = "#1F2937"        # Charcoal
-    light_bg: str = "#F9FAFB"          # Cool gray background
+    primary_color: str = "#1E3A8A"  # Deep corporate blue
+    secondary_color: str = "#4B5563"  # Slate gray
+    text_color: str = "#1F2937"  # Charcoal
+    light_bg: str = "#F9FAFB"  # Cool gray background
 
     # Sizes in points
     heading1_size: float = 20.0

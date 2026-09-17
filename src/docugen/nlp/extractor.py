@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional
 
 try:
     import spacy
+
     SPACY_AVAILABLE = True
 except ImportError:
     SPACY_AVAILABLE = False

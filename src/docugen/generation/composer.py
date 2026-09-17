@@ -154,8 +154,16 @@ def compose_nda(data: Dict[str, Any], template: TemplateDefinition) -> Document:
         elements=[
             SignatureBlock(
                 signers=[
-                    Signer(name=str(data.get("disclosing_party")), title="Disclosing Party", date=str(data.get("effective_date"))),
-                    Signer(name=str(data.get("receiving_party")), title="Receiving Party", date=str(data.get("effective_date"))),
+                    Signer(
+                        name=str(data.get("disclosing_party")),
+                        title="Disclosing Party",
+                        date=str(data.get("effective_date")),
+                    ),
+                    Signer(
+                        name=str(data.get("receiving_party")),
+                        title="Receiving Party",
+                        date=str(data.get("effective_date")),
+                    ),
                 ],
                 layout="side_by_side",
             )
@@ -194,22 +202,32 @@ def compose_service_agreement(data: Dict[str, Any], template: TemplateDefinition
         items = [ListItem.from_text(str(d), prefix="•") for d in data["deliverables"]]
         elements.append(ListBlock(items=items))
 
-    elements.extend([
-        Heading(text="2. Compensation and Payment Terms", level=2),
-        Paragraph.from_text(
-            f"Client agrees to pay Service Provider a fee of {data.get('fee_amount')} "
-            f"payable under {data.get('payment_terms', 'Net 30')} terms.",
-            space_after=12.0,
-        ),
-        Heading(text="3. Signatures", level=2),
-        SignatureBlock(
-            signers=[
-                Signer(name=str(data.get("client_name")), title="Client Representative", date=str(data.get("start_date"))),
-                Signer(name=str(data.get("service_provider")), title="Service Provider", date=str(data.get("start_date"))),
-            ],
-            layout="side_by_side",
-        ),
-    ])
+    elements.extend(
+        [
+            Heading(text="2. Compensation and Payment Terms", level=2),
+            Paragraph.from_text(
+                f"Client agrees to pay Service Provider a fee of {data.get('fee_amount')} "
+                f"payable under {data.get('payment_terms', 'Net 30')} terms.",
+                space_after=12.0,
+            ),
+            Heading(text="3. Signatures", level=2),
+            SignatureBlock(
+                signers=[
+                    Signer(
+                        name=str(data.get("client_name")),
+                        title="Client Representative",
+                        date=str(data.get("start_date")),
+                    ),
+                    Signer(
+                        name=str(data.get("service_provider")),
+                        title="Service Provider",
+                        date=str(data.get("start_date")),
+                    ),
+                ],
+                layout="side_by_side",
+            ),
+        ]
+    )
 
     doc.sections.append(Section(title="MASTER SERVICES AGREEMENT", elements=elements))
     return doc
@@ -345,10 +363,12 @@ def compose_invoice(data: Dict[str, Any], template: TemplateDefinition) -> Docum
     ]
 
     if data.get("payment_instructions"):
-        elements.extend([
-            Heading(text="Payment Instructions", level=3, space_before=16.0),
-            Paragraph.from_text(str(data.get("payment_instructions"))),
-        ])
+        elements.extend(
+            [
+                Heading(text="Payment Instructions", level=3, space_before=16.0),
+                Paragraph.from_text(str(data.get("payment_instructions"))),
+            ]
+        )
 
     doc.sections.append(Section(title=f"INVOICE #{data.get('invoice_number')}", elements=elements))
     return doc
@@ -410,15 +430,19 @@ def compose_quotation(data: Dict[str, Any], template: TemplateDefinition) -> Doc
 
     elements: List[Any] = [
         Paragraph.from_text(f"Prepared for: {data.get('client_name')}", bold=True),
-        Paragraph.from_text(f"Date: {data.get('quote_date')} | Valid Until: {data.get('valid_until')}", space_after=12.0),
+        Paragraph.from_text(
+            f"Date: {data.get('quote_date')} | Valid Until: {data.get('valid_until')}", space_after=12.0
+        ),
         Table(bordered=True, has_header=True, col_widths=[0.45, 0.15, 0.20, 0.20], rows=item_rows),
     ]
 
     if data.get("terms_and_conditions"):
-        elements.extend([
-            Heading(text="Terms & Conditions", level=3, space_before=14.0),
-            Paragraph.from_text(str(data.get("terms_and_conditions"))),
-        ])
+        elements.extend(
+            [
+                Heading(text="Terms & Conditions", level=3, space_before=14.0),
+                Paragraph.from_text(str(data.get("terms_and_conditions"))),
+            ]
+        )
 
     doc.sections.append(Section(title=f"PRICE QUOTATION #{data.get('quote_number')}", elements=elements))
     return doc
@@ -439,7 +463,10 @@ def compose_business_report(data: Dict[str, Any], template: TemplateDefinition) 
     )
 
     elements: List[Any] = [
-        Paragraph.from_text(f"Author: {data.get('prepared_by')} | Organization: {data.get('organization')} | Date: {data.get('report_date')}", space_after=16.0),
+        Paragraph.from_text(
+            f"Author: {data.get('prepared_by')} | Organization: {data.get('organization')} | Date: {data.get('report_date')}",
+            space_after=16.0,
+        ),
         Heading(text="Executive Summary", level=2),
         Paragraph.from_text(str(data.get("executive_summary")), space_after=14.0),
     ]
@@ -451,7 +478,7 @@ def compose_business_report(data: Dict[str, Any], template: TemplateDefinition) 
 
     if data.get("recommendations"):
         elements.append(Heading(text="Recommendations", level=2, space_before=14.0))
-        items = [ListItem.from_text(str(r), prefix=f"{i+1}.") for i, r in enumerate(data["recommendations"])]
+        items = [ListItem.from_text(str(r), prefix=f"{i + 1}.") for i, r in enumerate(data["recommendations"])]
         elements.append(ListBlock(items=items, ordered=True))
 
     doc.sections.append(Section(title=str(data.get("report_title")), elements=elements))
@@ -472,9 +499,17 @@ def compose_certificate(data: Dict[str, Any], template: TemplateDefinition) -> D
     elements: List[Any] = [
         Paragraph.from_text("THIS IS PROUDLY PRESENTED TO", alignment=Alignment.CENTER, space_after=18.0),
         Heading(text=str(data.get("recipient_name")), level=1, alignment=Alignment.CENTER, space_after=18.0),
-        Paragraph.from_text("in recognition of successfully completing and mastering the curriculum for:", alignment=Alignment.CENTER, space_after=12.0),
-        Paragraph.from_text(str(data.get("course_or_achievement")), bold=True, alignment=Alignment.CENTER, space_after=24.0),
-        Paragraph.from_text(f"Date of Issuance: {data.get('issue_date')}", alignment=Alignment.CENTER, space_after=24.0),
+        Paragraph.from_text(
+            "in recognition of successfully completing and mastering the curriculum for:",
+            alignment=Alignment.CENTER,
+            space_after=12.0,
+        ),
+        Paragraph.from_text(
+            str(data.get("course_or_achievement")), bold=True, alignment=Alignment.CENTER, space_after=24.0
+        ),
+        Paragraph.from_text(
+            f"Date of Issuance: {data.get('issue_date')}", alignment=Alignment.CENTER, space_after=24.0
+        ),
         SignatureBlock(
             signers=[
                 Signer(
@@ -490,7 +525,9 @@ def compose_certificate(data: Dict[str, Any], template: TemplateDefinition) -> D
 
     if data.get("certificate_id"):
         elements.append(
-            Paragraph.from_text(f"Certificate ID: {data.get('certificate_id')}", alignment=Alignment.CENTER, space_after=6.0)
+            Paragraph.from_text(
+                f"Certificate ID: {data.get('certificate_id')}", alignment=Alignment.CENTER, space_after=6.0
+            )
         )
 
     doc.sections.append(
@@ -537,6 +574,7 @@ def compose_document(data: Dict[str, Any], template: TemplateDefinition) -> Docu
     if template.file_path and str(template.file_path).endswith(".docx"):
         from pathlib import Path
         from docugen.templates.docx_parser import parse_and_merge_docx_template
+
         return parse_and_merge_docx_template(Path(template.file_path), data, template)
 
     # Built-in dispatch

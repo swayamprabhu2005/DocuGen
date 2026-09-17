@@ -92,9 +92,7 @@ def normalize_date(value: Any) -> Union[str, Any]:
     return value
 
 
-def normalize_input(
-    data: Dict[str, Any], schema: Optional[DocumentSchema] = None
-) -> Dict[str, Any]:
+def normalize_input(data: Dict[str, Any], schema: Optional[DocumentSchema] = None) -> Dict[str, Any]:
     """Normalize raw input dictionary according to standard rules and schema hints.
 
     Args:

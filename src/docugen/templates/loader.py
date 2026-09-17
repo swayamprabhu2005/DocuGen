@@ -36,6 +36,7 @@ class SafeTemplateLoader:
     @staticmethod
     def _format_date(value: Any, fmt: str = "%B %d, %Y") -> str:
         from datetime import datetime
+
         if isinstance(value, str):
             for in_fmt in ("%Y-%m-%d", "%d-%m-%Y", "%m/%d/%Y"):
                 try:

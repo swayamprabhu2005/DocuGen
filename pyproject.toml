@@ -43,9 +43,11 @@ nlp = [
 ]
 dev = [
     "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
     "build>=1.0.0",
     "wheel",
     "ruff>=0.1.0",
+    "mypy>=1.0.0",
 ]
 
 [project.scripts]
@@ -73,3 +75,11 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501", "F401", "F841", "E402", "I001"]

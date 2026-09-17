@@ -66,7 +66,9 @@ def classify_document(
             if ratio == 1.0:
                 schema_matches.append({"document_type": doc_type, "score": 1.0, "method": "schema_match"})
             elif ratio >= 0.6:
-                schema_matches.append({"document_type": doc_type, "score": round(ratio * 0.9, 2), "method": "schema_match"})
+                schema_matches.append(
+                    {"document_type": doc_type, "score": round(ratio * 0.9, 2), "method": "schema_match"}
+                )
         except Exception:
             continue
 

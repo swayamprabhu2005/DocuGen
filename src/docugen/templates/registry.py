@@ -73,8 +73,7 @@ class TemplateRegistry:
             return self._templates[name_str]
 
         raise TemplateNotFoundError(
-            f"Template '{template_identifier}' not found in registry. "
-            f"Available templates: {self.list_templates()}"
+            f"Template '{template_identifier}' not found in registry. Available templates: {self.list_templates()}"
         )
 
 

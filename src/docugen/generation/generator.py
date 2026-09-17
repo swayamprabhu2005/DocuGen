@@ -120,6 +120,7 @@ def generate(
         val_result = validate_data(normalized_data, schema, strict=is_strict)
     else:
         from docugen.core.models import ValidationResult
+
         val_result = ValidationResult(valid=True)
 
     # Step 6: Composition into Document IR
@@ -137,6 +138,7 @@ def generate(
     # Apply default watermark if configured
     if cfg.default_watermark and not doc_ir.watermark:
         from docugen.core.document_ir import Watermark
+
         doc_ir.watermark = Watermark(text=cfg.default_watermark)
 
     warnings = [w.message for w in val_result.warnings]
@@ -165,6 +167,7 @@ def generate(
     if dest_path.exists() and not cfg.overwrite_existing and output_path is None:
         # Create unique filename if not overwriting
         from datetime import datetime
+
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         dest_path = dest_path.with_name(f"{dest_path.stem}_{ts}.{fmt}")
 

@@ -116,7 +116,6 @@ def _make_rich_document() -> Document:
 
 
 class TestPdfRenderer:
-
     def test_pdf_renders_successfully(self, temp_output_dir):
         doc = _make_rich_document()
         renderer = PdfRenderer()
@@ -139,9 +138,7 @@ class TestPdfRenderer:
     def test_pdf_without_header_footer(self, temp_output_dir):
         doc = Document(
             metadata=DocumentMetadata(title="Minimal PDF"),
-            sections=[
-                Section(elements=[Paragraph.from_text("Simple minimal paragraph.")])
-            ],
+            sections=[Section(elements=[Paragraph.from_text("Simple minimal paragraph.")])],
         )
         renderer = PdfRenderer()
         dest = temp_output_dir / "minimal.pdf"
@@ -159,7 +156,6 @@ class TestPdfRenderer:
 
 
 class TestDocxRenderer:
-
     def test_docx_renders_successfully(self, temp_output_dir):
         doc = _make_rich_document()
         renderer = DocxRenderer()
@@ -178,6 +174,7 @@ class TestDocxRenderer:
 
         # Verify it's a valid docx by loading it
         import docx as python_docx
+
         loaded = python_docx.Document(str(dest))
         assert len(loaded.paragraphs) > 0
 

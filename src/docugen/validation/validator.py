@@ -63,9 +63,7 @@ def validate_data(
             result.valid = False
         result.errors.extend(custom_res.errors)
         result.warnings.extend(custom_res.warnings)
-        result.missing_fields.extend(
-            [f for f in custom_res.missing_fields if f not in result.missing_fields]
-        )
+        result.missing_fields.extend([f for f in custom_res.missing_fields if f not in result.missing_fields])
 
     # In strict mode, if invalid, raise ValidationError
     if strict and not result.valid:

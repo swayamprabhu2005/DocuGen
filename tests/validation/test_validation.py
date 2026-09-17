@@ -28,7 +28,9 @@ def test_field_rules_and_types():
         title="Test Rules",
         fields={
             "age": FieldDefinition(name="age", type=FieldType.INTEGER, minimum=18, maximum=65),
-            "department": FieldDefinition(name="department", type=FieldType.STRING, enum_values=["Engineering", "Sales"]),
+            "department": FieldDefinition(
+                name="department", type=FieldType.STRING, enum_values=["Engineering", "Sales"]
+            ),
             "email": FieldDefinition(name="email", type=FieldType.STRING, regex_pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$"),
         },
     )

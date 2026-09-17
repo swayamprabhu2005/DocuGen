@@ -24,8 +24,7 @@ def get_schema(document_type: str) -> DocumentSchema:
     key = document_type.strip().lower()
     if key not in _SCHEMAS:
         raise SchemaError(
-            f"No schema registered for document type '{document_type}'. "
-            f"Available: {list_document_types()}"
+            f"No schema registered for document type '{document_type}'. Available: {list_document_types()}"
         )
     return _SCHEMAS[key]
 

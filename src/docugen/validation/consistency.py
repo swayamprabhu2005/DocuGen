@@ -91,9 +91,7 @@ def check_invoice_totals(data: Dict[str, Any], result: ValidationResult) -> None
             )
 
 
-def check_schema_cross_field_rules(
-    data: Dict[str, Any], schema: DocumentSchema, result: ValidationResult
-) -> None:
+def check_schema_cross_field_rules(data: Dict[str, Any], schema: DocumentSchema, result: ValidationResult) -> None:
     """Evaluate explicit declarative cross-field rules on the schema."""
     for rule in schema.cross_field_rules:
         val_a = data.get(rule.field_a)
@@ -139,9 +137,7 @@ def register_consistency_checker(fn: ConsistencyCheckFn) -> None:
         _CUSTOM_CONSISTENCY_CHECKERS.append(fn)
 
 
-def check_consistency(
-    data: Dict[str, Any], schema: DocumentSchema, result: ValidationResult
-) -> None:
+def check_consistency(data: Dict[str, Any], schema: DocumentSchema, result: ValidationResult) -> None:
     """Run all consistency checks on data."""
     check_date_ordering(data, result)
     check_party_distinctness(data, result)

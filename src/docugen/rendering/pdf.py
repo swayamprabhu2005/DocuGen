@@ -362,15 +362,15 @@ class PdfRenderer(Renderer):
         ]
 
         if tbl.bordered:
-            t_style.extend([
-                ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor(self.formatting.table_border_color)),
-                ("BOX", (0, 0), (-1, -1), 1.0, colors.HexColor(self.formatting.table_border_color)),
-            ])
+            t_style.extend(
+                [
+                    ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor(self.formatting.table_border_color)),
+                    ("BOX", (0, 0), (-1, -1), 1.0, colors.HexColor(self.formatting.table_border_color)),
+                ]
+            )
 
         if tbl.has_header and len(table_data) > 0:
-            t_style.append(
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor(self.formatting.table_header_bg))
-            )
+            t_style.append(("BACKGROUND", (0, 0), (-1, 0), colors.HexColor(self.formatting.table_header_bg)))
 
         p_table.setStyle(TableStyle(t_style))
         return p_table
@@ -403,10 +403,12 @@ class PdfRenderer(Renderer):
         col_w = 504.0 / len(signers)
         sig_table = PlatypusTable([cells], colWidths=[col_w] * len(signers))
         sig_table.setStyle(
-            TableStyle([
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("TOPPADDING", (0, 0), (-1, -1), 10),
-            ])
+            TableStyle(
+                [
+                    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                    ("TOPPADDING", (0, 0), (-1, -1), 10),
+                ]
+            )
         )
         flowables.append(sig_table)
         flowables.append(Spacer(1, 12))

@@ -66,9 +66,7 @@ def adapt_input(data: Any) -> Dict[str, Any]:
     if isinstance(data, str):
         trimmed = data.strip()
         # Check if it looks like JSON string
-        if (trimmed.startswith("{") and trimmed.endswith("}")) or (
-            trimmed.startswith("[") and trimmed.endswith("]")
-        ):
+        if (trimmed.startswith("{") and trimmed.endswith("}")) or (trimmed.startswith("[") and trimmed.endswith("]")):
             try:
                 loaded = json.loads(trimmed)
                 if not isinstance(loaded, dict):
@@ -82,9 +80,7 @@ def adapt_input(data: Any) -> Dict[str, Any]:
         if path_candidate.is_file():
             return adapt_input(path_candidate)
 
-        raise AdapterError(
-            "String input was neither a valid JSON string nor an existing file path."
-        )
+        raise AdapterError("String input was neither a valid JSON string nor an existing file path.")
 
     raise AdapterError(
         f"Unsupported input type '{type(data).__name__}'. Expected dict, JSON string/file, Pydantic model, or dataclass."

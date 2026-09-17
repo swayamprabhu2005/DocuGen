@@ -11,6 +11,7 @@ try:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.naive_bayes import MultinomialNB
     from sklearn.pipeline import Pipeline
+
     SKLEARN_AVAILABLE = True
 except ImportError:
     SKLEARN_AVAILABLE = False
@@ -36,8 +37,7 @@ class MLDocumentClassifier:
         """Train the classifier on (input_dict, document_type) pairs."""
         if not SKLEARN_AVAILABLE:
             raise ImportError(
-                "scikit-learn is required for ML classification. "
-                "Install it with `pip install docugen-ai[ml]`."
+                "scikit-learn is required for ML classification. Install it with `pip install docugen-ai[ml]`."
             )
 
         texts: List[str] = []
@@ -48,10 +48,12 @@ class MLDocumentClassifier:
             texts.append(text_repr)
             labels.append(doc_type)
 
-        self._pipeline = Pipeline([
-            ("tfidf", TfidfVectorizer()),
-            ("clf", MultinomialNB()),
-        ])
+        self._pipeline = Pipeline(
+            [
+                ("tfidf", TfidfVectorizer()),
+                ("clf", MultinomialNB()),
+            ]
+        )
         self._pipeline.fit(texts, labels)
         self._is_trained = True
 
