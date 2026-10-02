@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from docugen.api.async_api import generate_document_async, generate_documents_batch
 from docugen.classification.resolver import classify_document
 from docugen.core.configuration import DocuGenConfig, get_default_config, set_default_config
 from docugen.core.document_ir import Document
@@ -27,9 +28,17 @@ from docugen.core.schema_registry import get_schema, list_document_types
 from docugen.core.schemas import DocumentSchema
 from docugen.generation.clause_engine import ClauseDefinition, get_clause_engine
 from docugen.generation.generator import generate
+from docugen.i18n.currency import amount_to_words, format_currency, integer_to_words
+from docugen.i18n.translations import translate_term
 from docugen.input.adapters import adapt_input
 from docugen.input.normalizer import normalize_input
 from docugen.plugins.registry import register_document_type
+from docugen.signing.digital_signature import (
+    DigitalSignatureConfig,
+    generate_self_signed_certificate,
+    sign_pdf_document,
+    verify_pdf_signature,
+)
 from docugen.templates.registry import TemplateDefinition, get_template_registry, list_templates, register_template
 from docugen.validation.validator import register_validator, validate_data
 
@@ -43,18 +52,22 @@ def generate_document(
     config: Optional[DocuGenConfig] = None,
     strict: Optional[bool] = None,
     dry_run: bool = False,
+    digital_signature: Optional[Union[DigitalSignatureConfig, bool]] = None,
+    watermark: Optional[Any] = None,
 ) -> GenerationResult:
-    """Generate a document from input data into DOCX or PDF.
+    """Generate a document from input data into PDF, DOCX, HTML, or XLSX.
 
     Args:
         data: Python dictionary, JSON string, JSON file path, Pydantic model, or dataclass.
         template: Built-in template name (e.g. 'employment_contract') or path to custom template.
         document_type: Explicit document type name if not determined from template.
-        output: Target format, either 'pdf' or 'docx'. Defaults to 'pdf'.
+        output: Target format: 'pdf', 'docx', 'html', or 'xlsx'. Defaults to 'pdf'.
         output_path: Optional explicit output file destination.
         config: Optional custom DocuGenConfig.
         strict: If True, validation errors raise ValidationError.
         dry_run: If True, builds Document IR and validates without rendering file.
+        digital_signature: Optional DigitalSignatureConfig or True to certify with self-signed certificate.
+        watermark: Optional watermark text or Watermark instance.
 
     Returns:
         GenerationResult: Object detailing status, output path, validation results, and metadata.
@@ -68,6 +81,8 @@ def generate_document(
         config=config,
         strict=strict,
         dry_run=dry_run,
+        digital_signature=digital_signature,
+        watermark=watermark,
     )
 
 
@@ -178,4 +193,17 @@ __all__ = [
     "TemplateError",
     "TemplateNotFoundError",
     "RenderingError",
+    # Async API
+    "generate_document_async",
+    "generate_documents_batch",
+    # Digital Signatures
+    "DigitalSignatureConfig",
+    "generate_self_signed_certificate",
+    "sign_pdf_document",
+    "verify_pdf_signature",
+    # Internationalization
+    "amount_to_words",
+    "format_currency",
+    "integer_to_words",
+    "translate_term",
 ]

@@ -90,18 +90,21 @@ def list_templates() -> List[str]:
 
 
 def register_template(
-    name: str,
-    document_type: str,
+    name_or_template: Union[str, TemplateDefinition],
+    document_type: Optional[str] = None,
     composer: Optional[ComposerFn] = None,
     file_path: Optional[str] = None,
     description: Optional[str] = None,
     version: str = "1.0.0",
 ) -> None:
     """Public API to register a custom template."""
+    if isinstance(name_or_template, TemplateDefinition):
+        _GLOBAL_TEMPLATE_REGISTRY.register(name_or_template)
+        return
     _GLOBAL_TEMPLATE_REGISTRY.register(
         TemplateDefinition(
-            name=name,
-            document_type=document_type,
+            name=name_or_template,
+            document_type=document_type or name_or_template,
             composer=composer,
             file_path=file_path,
             description=description,
