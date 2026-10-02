@@ -3,14 +3,14 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "docugen-ai"
+name = "docugen-library"
 version = "0.1.0"
 description = "Production-grade, local-first document intelligence and generation framework"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
 authors = [
-    { name = "DocuGen AI Team", email = "maintainers@docugen.ai" }
+    { name = "DocuGen Team", email = "maintainers@docugen.org" }
 ]
 keywords = ["document", "generation", "pdf", "docx", "templates", "schema", "clauses", "contracts", "invoices"]
 classifiers = [
@@ -32,6 +32,8 @@ dependencies = [
     "python-docx>=1.0.0",
     "reportlab>=4.0.0",
     "pillow>=9.0.0",
+    "cryptography>=41.0.0",
+    "openpyxl>=3.1.0",
 ]
 
 [project.optional-dependencies]
@@ -54,10 +56,10 @@ dev = [
 docugen = "docugen.cli.main:main"
 
 [project.urls]
-Homepage = "https://github.com/docugen-ai/docugen"
-Documentation = "https://github.com/docugen-ai/docugen#readme"
-Repository = "https://github.com/docugen-ai/docugen.git"
-Issues = "https://github.com/docugen-ai/docugen/issues"
+Homepage = "https://github.com/swayamprabhu2005/DocuGen"
+Documentation = "https://github.com/swayamprabhu2005/DocuGen#readme"
+Repository = "https://github.com/swayamprabhu2005/DocuGen.git"
+Issues = "https://github.com/swayamprabhu2005/DocuGen/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

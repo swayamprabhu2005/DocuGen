@@ -21,7 +21,10 @@ from docugen.generation.composer import compose_document
 from docugen.input.adapters import adapt_input
 from docugen.input.normalizer import normalize_input
 from docugen.rendering.docx import DocxRenderer
+from docugen.rendering.html import HtmlRenderer
 from docugen.rendering.pdf import PdfRenderer
+from docugen.rendering.xlsx import XlsxRenderer
+from docugen.signing.digital_signature import DigitalSignatureConfig, sign_pdf_document
 from docugen.templates.registry import TemplateDefinition, get_template_registry
 from docugen.validation.validator import validate_data
 from docugen.versioning.metadata import GenerationMetadata
@@ -38,6 +41,8 @@ def generate(
     config: Optional[DocuGenConfig] = None,
     strict: Optional[bool] = None,
     dry_run: bool = False,
+    digital_signature: Optional[Union[DigitalSignatureConfig, bool]] = None,
+    watermark: Optional[Any] = None,
 ) -> GenerationResult:
     """Execute end-to-end document generation pipeline.
 
@@ -141,6 +146,15 @@ def generate(
 
         doc_ir.watermark = Watermark(text=cfg.default_watermark)
 
+    # Apply explicit watermark override if provided
+    if watermark is not None:
+        from docugen.core.document_ir import Watermark
+
+        if isinstance(watermark, str):
+            doc_ir.watermark = Watermark(text=watermark)
+        elif isinstance(watermark, Watermark):
+            doc_ir.watermark = watermark
+
     warnings = [w.message for w in val_result.warnings]
 
     # Dry run check
@@ -179,11 +193,30 @@ def generate(
     if fmt == "pdf":
         renderer = PdfRenderer()
         render_res = renderer.render(doc_ir, dest_path)
+        # Apply cryptographic digital signature if requested
+        if render_res.success and digital_signature:
+            sig_cfg = (
+                digital_signature
+                if isinstance(digital_signature, DigitalSignatureConfig)
+                else DigitalSignatureConfig()
+            )
+            try:
+                sign_pdf_document(dest_path, config=sig_cfg)
+                gen_meta.custom_metadata["digitally_signed"] = True
+                gen_meta.custom_metadata["signer"] = sig_cfg.signer_name
+            except Exception as sig_exc:
+                logger.warning("Digital signature application failed: %s", sig_exc)
     elif fmt == "docx":
         renderer = DocxRenderer()
         render_res = renderer.render(doc_ir, dest_path)
+    elif fmt == "html":
+        renderer = HtmlRenderer()
+        render_res = renderer.render(doc_ir, dest_path)
+    elif fmt == "xlsx":
+        renderer = XlsxRenderer()
+        render_res = renderer.render(doc_ir, dest_path)
     else:
-        raise RenderingError(f"Unsupported output format '{output}'. Supported: ['pdf', 'docx']")
+        raise RenderingError(f"Unsupported output format '{output}'. Supported: ['pdf', 'docx', 'html', 'xlsx']")
 
     return GenerationResult(
         success=render_res.success,

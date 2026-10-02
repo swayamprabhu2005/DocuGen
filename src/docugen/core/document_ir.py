@@ -49,11 +49,13 @@ class Paragraph(BaseModel):
         italic: bool = False,
         alignment: Alignment = Alignment.LEFT,
         space_after: float = 6.0,
+        space_before: float = 0.0,
     ) -> "Paragraph":
         return cls(
             runs=[TextRun(text=text, bold=bold, italic=italic)],
             alignment=alignment,
             space_after=space_after,
+            space_before=space_before,
         )
 
     @property
@@ -188,12 +190,35 @@ class Footer(BaseModel):
 
 
 class Watermark(BaseModel):
-    """Diagonal background watermark."""
+    """Diagonal background or status watermark supporting text, status labels, or images."""
 
-    text: str = "CONFIDENTIAL"
+    text: Optional[str] = "CONFIDENTIAL"
+    status: Optional[str] = None  # e.g., "PAID", "DRAFT", "VOID", "CONFIDENTIAL", "APPROVED"
+    image_path: Optional[str] = None  # Path to background logo or crest image
     color: str = "#E0E0E0"
     opacity: float = 0.3
     font_size: float = 54.0
+    rotation: float = 45.0
+
+
+class QRCodeElement(BaseModel):
+    """A dynamic QR code block element."""
+
+    data: str
+    size: float = 80.0
+    caption: Optional[str] = None
+    alignment: Alignment = Alignment.CENTER
+
+
+class BarcodeElement(BaseModel):
+    """A standard 1D barcode block element (e.g. Code128, Standard39, EAN13)."""
+
+    data: str
+    barcode_type: str = "Code128"
+    width: float = 160.0
+    height: float = 40.0
+    caption: Optional[str] = None
+    alignment: Alignment = Alignment.CENTER
 
 
 class FieldValue(BaseModel):
@@ -225,6 +250,8 @@ BlockElement = Union[
     SignatureBlock,
     PageBreak,
     ClauseIR,
+    QRCodeElement,
+    BarcodeElement,
 ]
 
 

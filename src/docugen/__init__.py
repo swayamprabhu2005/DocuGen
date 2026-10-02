@@ -1,8 +1,9 @@
-"""DocuGen AI: Production-grade, local-first document intelligence and generation framework."""
+"""DocuGen: Production-grade, local-first document intelligence and generation framework."""
 
 from docugen.api.public import (
     ClassificationResult,
     Diagnostic,
+    DigitalSignatureConfig,
     DocuGenConfig,
     DocuGenError,
     GenerationResult,
@@ -13,9 +14,14 @@ from docugen.api.public import (
     TemplateNotFoundError,
     ValidationError,
     ValidationResult,
+    amount_to_words,
     classify_document,
+    format_currency,
     generate_clause,
     generate_document,
+    generate_document_async,
+    generate_documents_batch,
+    generate_self_signed_certificate,
     get_default_config,
     get_schema,
     list_document_types,
@@ -25,7 +31,10 @@ from docugen.api.public import (
     register_template,
     register_validator,
     set_default_config,
+    sign_pdf_document,
+    translate_term,
     validate_document_data,
+    verify_pdf_signature,
 )
 from docugen.core.document_ir import (
     Alignment,
@@ -47,7 +56,8 @@ from docugen.core.document_ir import (
     Table,
     TableCell,
     TableRow,
-    TextRun,
+    BarcodeElement,
+    QRCodeElement,
     Watermark,
 )
 from docugen.versioning.metadata import (
@@ -60,6 +70,8 @@ from docugen.versioning.metadata import (
 __all__ = [
     # Top-level functions
     "generate_document",
+    "generate_document_async",
+    "generate_documents_batch",
     "validate_document_data",
     "classify_document",
     "generate_clause",
@@ -70,6 +82,15 @@ __all__ = [
     "get_schema",
     "list_templates",
     "list_document_types",
+    # Digital Signatures & Security
+    "DigitalSignatureConfig",
+    "sign_pdf_document",
+    "verify_pdf_signature",
+    "generate_self_signed_certificate",
+    # i18n & Localization
+    "amount_to_words",
+    "format_currency",
+    "translate_term",
     # Configuration
     "DocuGenConfig",
     "get_default_config",
@@ -107,6 +128,8 @@ __all__ = [
     "Header",
     "Footer",
     "Watermark",
+    "QRCodeElement",
+    "BarcodeElement",
     "ClauseIR",
     "Alignment",
     "BlockElement",
