@@ -1,0 +1,111 @@
+"""Multi-language translation dictionaries and internationalization helpers for DocuGen AI."""
+
+from __future__ import annotations
+
+from typing import Dict
+
+_TRANSLATIONS: Dict[str, Dict[str, str]] = {
+    "en": {
+        "invoice": "Invoice",
+        "quotation": "Quotation",
+        "receipt": "Receipt",
+        "agreement": "Agreement",
+        "contract": "Contract",
+        "due_date": "Due Date",
+        "issue_date": "Issue Date",
+        "subtotal": "Subtotal",
+        "total": "Total Amount",
+        "tax": "Tax",
+        "discount": "Discount",
+        "signature": "Authorized Signature",
+        "terms": "Terms and Conditions",
+        "confidential": "CONFIDENTIAL",
+        "draft": "DRAFT",
+        "paid": "PAID",
+        "void": "VOID",
+    },
+    "es": {
+        "invoice": "Factura",
+        "quotation": "Cotización",
+        "receipt": "Recibo",
+        "agreement": "Acuerdo",
+        "contract": "Contrato",
+        "due_date": "Fecha de Vencimiento",
+        "issue_date": "Fecha de Emisión",
+        "subtotal": "Subtotal",
+        "total": "Monto Total",
+        "tax": "Impuesto",
+        "discount": "Descuento",
+        "signature": "Firma Autorizada",
+        "terms": "Términos y Condiciones",
+        "confidential": "CONFIDENCIAL",
+        "draft": "BORRADOR",
+        "paid": "PAGADO",
+        "void": "ANULADO",
+    },
+    "fr": {
+        "invoice": "Facture",
+        "quotation": "Devis",
+        "receipt": "Reçu",
+        "agreement": "Accord",
+        "contract": "Contrat",
+        "due_date": "Date d'échéance",
+        "issue_date": "Date d'émission",
+        "subtotal": "Sous-total",
+        "total": "Montant Total",
+        "tax": "Taxe",
+        "discount": "Remise",
+        "signature": "Signature Autorisée",
+        "terms": "Conditions Générales",
+        "confidential": "CONFIDENTIEL",
+        "draft": "BROUILLON",
+        "paid": "PAYÉ",
+        "void": "ANNULÉ",
+    },
+    "de": {
+        "invoice": "Rechnung",
+        "quotation": "Angebot",
+        "receipt": "Quittung",
+        "agreement": "Vereinbarung",
+        "contract": "Vertrag",
+        "due_date": "Fälligkeitsdatum",
+        "issue_date": "Ausstellungsdatum",
+        "subtotal": "Zwischensumme",
+        "total": "Gesamtbetrag",
+        "tax": "Steuer",
+        "discount": "Rabatt",
+        "signature": "Autorisierte Unterschrift",
+        "terms": "Allgemeine Geschäftsbedingungen",
+        "confidential": "VERTRAULICH",
+        "draft": "ENTWURF",
+        "paid": "BEZAHLT",
+        "void": "UNGÜLTIG",
+    },
+    "hi": {
+        "invoice": "चालान (Invoice)",
+        "quotation": "कोटेशन (Quotation)",
+        "receipt": "रसीद (Receipt)",
+        "agreement": "समझौता (Agreement)",
+        "contract": "अनुबंध (Contract)",
+        "due_date": "नियत तिथि (Due Date)",
+        "issue_date": "जारी तिथि (Issue Date)",
+        "subtotal": "उप-योग (Subtotal)",
+        "total": "कुल राशि (Total Amount)",
+        "tax": "कर (Tax)",
+        "discount": "छूट (Discount)",
+        "signature": "अधिकृत हस्ताक्षर (Authorized Signature)",
+        "terms": "नियम एवं शर्तें (Terms & Conditions)",
+        "confidential": "गोपनीय (CONFIDENTIAL)",
+        "draft": "प्रारूप (DRAFT)",
+        "paid": "भुगतान किया (PAID)",
+        "void": "रद्द (VOID)",
+    },
+}
+
+
+def translate_term(term: str, language: str = "en", lang: Optional[str] = None) -> str:
+    """Retrieve localized label for standard document terminology."""
+    selected_lang = (lang or language).lower().strip()
+    lang_dict = _TRANSLATIONS.get(selected_lang, _TRANSLATIONS["en"])
+    clean_key = term.lower().strip().replace(" ", "_")
+    return lang_dict.get(clean_key, term)
