@@ -196,9 +196,7 @@ def generate(
         # Apply cryptographic digital signature if requested
         if render_res.success and digital_signature:
             sig_cfg = (
-                digital_signature
-                if isinstance(digital_signature, DigitalSignatureConfig)
-                else DigitalSignatureConfig()
+                digital_signature if isinstance(digital_signature, DigitalSignatureConfig) else DigitalSignatureConfig()
             )
             try:
                 sign_pdf_document(dest_path, config=sig_cfg)

@@ -109,7 +109,9 @@ class XlsxRenderer(Renderer):
                     current_row += 1
 
                 elif isinstance(elem, ClauseIR):
-                    ws.cell(row=current_row, column=1, value=f"{elem.number or ''} {elem.title}".strip()).font = bold_font
+                    ws.cell(
+                        row=current_row, column=1, value=f"{elem.number or ''} {elem.title}".strip()
+                    ).font = bold_font
                     current_row += 1
                     for p in elem.body:
                         ws.cell(row=current_row, column=1, value=p.plain_text).font = regular_font
@@ -124,7 +126,9 @@ class XlsxRenderer(Renderer):
                     current_row += 1
                     for r_idx, row in enumerate(elem.rows):
                         for c_idx, cell in enumerate(row.cells, start=1):
-                            xl_cell = ws.cell(row=current_row, column=c_idx, value=self._parse_cell_value(cell.plain_text))
+                            xl_cell = ws.cell(
+                                row=current_row, column=c_idx, value=self._parse_cell_value(cell.plain_text)
+                            )
                             xl_cell.border = thin_border
                             if row.is_header or cell.bold:
                                 xl_cell.fill = header_fill

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Optional
 
 _TRANSLATIONS: Dict[str, Dict[str, str]] = {
     "en": {

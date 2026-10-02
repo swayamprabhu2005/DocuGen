@@ -360,12 +360,22 @@ class HtmlRenderer(Renderer):
         return f"<table class='{bordered}'>{''.join(rows_html)}</table>"
 
     def _render_signature_block(self, sig: SignatureBlock) -> str:
-        intro = f"<p style='margin-bottom: 24px; font-weight: 500;'>{html.escape(sig.intro_text)}</p>" if sig.intro_text else ""
+        intro = (
+            f"<p style='margin-bottom: 24px; font-weight: 500;'>{html.escape(sig.intro_text)}</p>"
+            if sig.intro_text
+            else ""
+        )
         boxes = []
         for s in sig.signers:
             name = html.escape(s.name)
-            title = f"<br><span style='font-size: 9pt; color: #64748b;'>{html.escape(s.title)}</span>" if s.title else ""
-            date = f"<br><span style='font-size: 8.5pt; color: #94a3b8;'>Date: {html.escape(s.date)}</span>" if s.date else ""
+            title = (
+                f"<br><span style='font-size: 9pt; color: #64748b;'>{html.escape(s.title)}</span>" if s.title else ""
+            )
+            date = (
+                f"<br><span style='font-size: 8.5pt; color: #94a3b8;'>Date: {html.escape(s.date)}</span>"
+                if s.date
+                else ""
+            )
             boxes.append(f"<div class='signer-box'><strong>{name}</strong>{title}{date}</div>")
 
         return f"{intro}<div class='signature-block'>{''.join(boxes)}</div>"

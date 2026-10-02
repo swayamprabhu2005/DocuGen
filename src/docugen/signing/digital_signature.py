@@ -165,11 +165,9 @@ def sign_pdf_document(
     }
 
     meta_json = json.dumps(meta)
-    sig_block = (
-        f"\n%%DOCUGEN_DIGITAL_SIGNATURE_START\n"
-        f"%{meta_json}\n"
-        f"%%DOCUGEN_DIGITAL_SIGNATURE_END\n"
-    ).encode("utf-8")
+    sig_block = (f"\n%%DOCUGEN_DIGITAL_SIGNATURE_START\n%{meta_json}\n%%DOCUGEN_DIGITAL_SIGNATURE_END\n").encode(
+        "utf-8"
+    )
 
     # Append signature block to PDF
     signed_bytes = original_bytes + sig_block

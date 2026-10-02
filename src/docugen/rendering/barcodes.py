@@ -58,8 +58,14 @@ def generate_barcode_image(
         decomp = bc.decompose()
 
     char_widths = {
-        "a": 1, "b": 2, "c": 3, "d": 4,
-        "A": 1, "B": 2, "C": 3, "D": 4,
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": 4,
+        "A": 1,
+        "B": 2,
+        "C": 3,
+        "D": 4,
     }
     total_units = sum(char_widths.get(ch, 1) for ch in decomp)
     unit_px = max(1.0, float(width - 20) / max(total_units, 1))

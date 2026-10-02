@@ -26,6 +26,7 @@ class SafeTemplateLoader:
         self._env.filters["date_format"] = self._format_date
         from docugen.i18n.currency import amount_to_words
         from docugen.i18n.translations import translate_term
+
         self._env.filters["amount_to_words"] = lambda val, cur="USD": amount_to_words(val, currency_code=cur)
         self._env.filters["translate"] = lambda val, lang="en": translate_term(val, language=lang)
 

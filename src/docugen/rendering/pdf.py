@@ -360,7 +360,10 @@ class PdfRenderer(Renderer):
                     import io
                     from reportlab.platypus import Image as PlatypusImage
                     from docugen.rendering.barcodes import generate_barcode_bytes
-                    bc_bytes = generate_barcode_bytes(str(elem.data), barcode_type=elem.barcode_type, width=int(elem.width), height=int(elem.height))
+
+                    bc_bytes = generate_barcode_bytes(
+                        str(elem.data), barcode_type=elem.barcode_type, width=int(elem.width), height=int(elem.height)
+                    )
                     story.append(PlatypusImage(io.BytesIO(bc_bytes), width=elem.width, height=elem.height))
                 except Exception as inner_exc:
                     logger.error("Raster barcode fallback also failed: %s", inner_exc)
