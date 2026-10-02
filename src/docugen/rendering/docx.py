@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import io
 import logging
 from pathlib import Path
 from typing import Optional
 import docx
 from docugen.core.document_ir import (
     Alignment,
+    BarcodeElement,
     BlockElement,
     ClauseIR,
     Document,
@@ -16,12 +18,14 @@ from docugen.core.document_ir import (
     ListBlock,
     PageBreak,
     Paragraph,
+    QRCodeElement,
     Section,
     SignatureBlock,
     Table,
 )
 from docugen.core.exceptions import RenderingError
 from docugen.core.models import RenderResult
+from docugen.rendering.barcodes import generate_barcode_bytes, generate_qr_bytes
 from docugen.rendering.base import Renderer
 from docugen.rendering.formatting import DocumentFormatting, get_default_formatting
 
@@ -90,15 +94,26 @@ class DocxRenderer(Renderer):
             props.subject = document.metadata.subject
 
     def _apply_headers_footers(self, doc: docx.Document, document: Document) -> None:
-        """Configure header and footer text."""
+        """Configure header and footer text and watermark."""
         section = doc.sections[0]
+
+        # Apply watermark in header if configured
+        if document.watermark:
+            wm_text = (document.watermark.status or document.watermark.text or "").strip().upper()
+            if wm_text:
+                p_wm = section.header.paragraphs[0]
+                run_wm = p_wm.add_run(f"[{wm_text}]  ")
+                run_wm.bold = True
+                run_wm.font.size = docx.shared.Pt(11)
+                run_wm.font.color.rgb = docx.shared.RGBColor(160, 160, 160)
+
         if document.header:
             header_text_parts = [
                 t for t in (document.header.left_text, document.header.center_text, document.header.right_text) if t
             ]
             if header_text_parts:
                 p = section.header.paragraphs[0]
-                p.text = "   |   ".join(header_text_parts)
+                p.text = (p.text or "") + "   |   ".join(header_text_parts)
                 p.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.RIGHT
 
         if document.footer:
@@ -154,6 +169,37 @@ class DocxRenderer(Renderer):
 
         elif isinstance(elem, PageBreak):
             doc.add_page_break()
+
+        elif isinstance(elem, QRCodeElement):
+            p = doc.add_paragraph()
+            p.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+            qr_bytes = generate_qr_bytes(elem.data, size=int(elem.size * 2))
+            p.add_run().add_picture(io.BytesIO(qr_bytes), width=docx.shared.Pt(elem.size))
+            if elem.caption:
+                cap_p = doc.add_paragraph(elem.caption)
+                cap_p.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+                cap_p.runs[0].italic = True
+                cap_p.runs[0].font.size = docx.shared.Pt(9)
+
+        elif isinstance(elem, BarcodeElement):
+            p = doc.add_paragraph()
+            p.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+            bc_bytes = generate_barcode_bytes(
+                elem.data,
+                barcode_type=elem.barcode_type,
+                width=int(elem.width * 2),
+                height=int(elem.height * 2),
+            )
+            p.add_run().add_picture(
+                io.BytesIO(bc_bytes),
+                width=docx.shared.Pt(elem.width),
+                height=docx.shared.Pt(elem.height),
+            )
+            if elem.caption:
+                cap_p = doc.add_paragraph(elem.caption)
+                cap_p.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+                cap_p.runs[0].italic = True
+                cap_p.runs[0].font.size = docx.shared.Pt(9)
 
     def _render_paragraph(self, doc: docx.Document, para: Paragraph) -> None:
         """Render Paragraph IR with inline TextRuns."""

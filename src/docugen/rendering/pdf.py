@@ -23,6 +23,7 @@ from reportlab.platypus import (
 
 from docugen.core.document_ir import (
     Alignment,
+    BarcodeElement,
     BlockElement,
     ClauseIR,
     Document,
@@ -30,11 +31,14 @@ from docugen.core.document_ir import (
     ListBlock,
     PageBreak,
     Paragraph,
+    QRCodeElement,
     Section,
     SignatureBlock,
     Table,
     Watermark,
 )
+from reportlab.graphics.barcode import createBarcodeDrawing, qr
+from reportlab.graphics.shapes import Drawing
 from docugen.core.models import RenderResult
 from docugen.rendering.base import Renderer
 from docugen.rendering.formatting import DocumentFormatting, get_default_formatting
@@ -72,18 +76,42 @@ class NumberedCanvas(canvas.Canvas):
 
         # 1. Draw Watermark if present
         wm = self.docugen_doc.watermark
-        if wm and wm.text:
-            self.saveState()
-            self.setFont("Helvetica-Bold", wm.font_size)
-            try:
-                wm_color = colors.HexColor(wm.color)
-            except Exception:
-                wm_color = colors.lightgrey
-            self.setFillColor(wm_color, alpha=wm.opacity)
-            self.translate(width / 2.0, height / 2.0)
-            self.rotate(45)
-            self.drawCentredString(0, 0, wm.text.upper())
-            self.restoreState()
+        if wm:
+            # 1a. Background logo / image watermark if provided
+            if wm.image_path and Path(wm.image_path).exists():
+                self.saveState()
+                self.translate(width / 2.0, height / 2.0)
+                self.rotate(wm.rotation)
+                img_size = 220.0
+                try:
+                    self.setFillAlpha(wm.opacity)
+                except Exception:
+                    pass
+                self.drawImage(
+                    wm.image_path,
+                    -img_size / 2.0,
+                    -img_size / 2.0,
+                    width=img_size,
+                    height=img_size,
+                    mask="auto",
+                    preserveAspectRatio=True,
+                )
+                self.restoreState()
+
+            # 1b. Text / Status watermark
+            text_to_draw = (wm.status or wm.text or "").strip().upper()
+            if text_to_draw:
+                self.saveState()
+                self.setFont("Helvetica-Bold", wm.font_size)
+                try:
+                    wm_color = colors.HexColor(wm.color)
+                except Exception:
+                    wm_color = colors.lightgrey
+                self.setFillColor(wm_color, alpha=wm.opacity)
+                self.translate(width / 2.0, height / 2.0)
+                self.rotate(wm.rotation)
+                self.drawCentredString(0, 0, text_to_draw)
+                self.restoreState()
 
         # 2. Draw Header
         if self.docugen_doc.header:
@@ -201,6 +229,17 @@ class PdfRenderer(Renderer):
                 spaceAfter=6,
             )
         )
+        self.styles.add(
+            ParagraphStyle(
+                name="DocCaption",
+                fontName="Helvetica-Oblique",
+                fontSize=fmt.caption_size,
+                leading=fmt.caption_size + 2,
+                textColor=colors.HexColor(fmt.secondary_color),
+                alignment=TA_CENTER,
+                spaceAfter=4,
+            )
+        )
 
     def render(self, document: Document, destination: Path) -> RenderResult:
         """Render Document IR to destination PDF file."""
@@ -294,6 +333,41 @@ class PdfRenderer(Renderer):
 
         elif isinstance(elem, PageBreak):
             story.append(FlowablePageBreak())
+
+        elif isinstance(elem, QRCodeElement):
+            qr_widget = qr.QrCodeWidget(elem.data)
+            b_bounds = qr_widget.getBounds()
+            w = (b_bounds[2] - b_bounds[0]) or 1.0
+            h = (b_bounds[3] - b_bounds[1]) or 1.0
+            scale_x = elem.size / w
+            scale_y = elem.size / h
+            d = Drawing(elem.size, elem.size, transform=[scale_x, 0, 0, scale_y, 0, 0])
+            d.add(qr_widget)
+            story.append(d)
+            if elem.caption:
+                cap_style = ParagraphStyle("QRCaption", parent=self.styles["DocCaption"], alignment=TA_CENTER)
+                story.append(PlatypusParagraph(elem.caption, cap_style))
+            story.append(Spacer(1, 6))
+
+        elif isinstance(elem, BarcodeElement):
+            try:
+                bc_type = "Code128" if elem.barcode_type.lower() == "code128" else elem.barcode_type
+                bc_drawing = createBarcodeDrawing(bc_type, value=str(elem.data), width=elem.width, height=elem.height)
+                story.append(bc_drawing)
+            except Exception as exc:
+                logger.warning("createBarcodeDrawing failed (%s), attempting raster fallback", exc)
+                try:
+                    import io
+                    from reportlab.platypus import Image as PlatypusImage
+                    from docugen.rendering.barcodes import generate_barcode_bytes
+                    bc_bytes = generate_barcode_bytes(str(elem.data), barcode_type=elem.barcode_type, width=int(elem.width), height=int(elem.height))
+                    story.append(PlatypusImage(io.BytesIO(bc_bytes), width=elem.width, height=elem.height))
+                except Exception as inner_exc:
+                    logger.error("Raster barcode fallback also failed: %s", inner_exc)
+            if elem.caption:
+                cap_style = ParagraphStyle("BCCaption", parent=self.styles["DocCaption"], alignment=TA_CENTER)
+                story.append(PlatypusParagraph(elem.caption, cap_style))
+            story.append(Spacer(1, 6))
 
     def _build_platypus_paragraph(self, para: Paragraph) -> PlatypusParagraph:
         xml_text = self._runs_to_xml(para.runs)
