@@ -11,7 +11,12 @@ build/
 wheels/
 .eggs/
 *.whl
+*.tar.gz
 MANIFEST
+sdist/
+
+# PyPI credentials
+.pypirc
 
 # Virtual environments
 .env
