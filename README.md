@@ -3,6 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.9%2B-blue" alt="Python 3.9+">
   <img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="License Apache 2.0">
+  <a href="https://github.com/swayamprabhu2005"><img src="https://img.shields.io/badge/author-Swayam%20Kiran%20Prabhu-blue" alt="Author Swayam Kiran Prabhu"></a>
   <img src="https://img.shields.io/badge/formats-PDF%20%7C%20DOCX%20%7C%20HTML%20%7C%20XLSX-purple" alt="Output Formats">
   <img src="https://img.shields.io/badge/security-SHA--256%20%2B%20RSA%20Digital%20Signatures-red" alt="Digital Signatures">
   <img src="https://img.shields.io/badge/privacy-100%25%20Local%20%28Zero%20Cloud%20Calls%29-brightgreen" alt="Local First">
@@ -264,6 +265,18 @@ python D:/Test/New/test_new_features.py
 
 ---
 
+## 👤 Author & Maintainer
+
+**Created and maintained by [Swayam Kiran Prabhu](https://github.com/swayamprabhu2005)**
+
+- **GitHub**: [@swayamprabhu2005](https://github.com/swayamprabhu2005)
+- **Email**: swayamkiranprabhu2005@gmail.com
+- **Repository**: [https://github.com/swayamprabhu2005/DocuGen](https://github.com/swayamprabhu2005/DocuGen)
+- **PyPI Package**: [https://pypi.org/project/docugen-library/](https://pypi.org/project/docugen-library/)
+
+---
+
 ## 📝 License
 
 Licensed under the [Apache License 2.0](LICENSE). Free for commercial and open-source use.
+

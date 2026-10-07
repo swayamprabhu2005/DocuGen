@@ -4,13 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "docugen-library"
-version = "0.1.0"
+version = "0.1.1"
 description = "Production-grade, local-first document intelligence and generation framework"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
 authors = [
-    { name = "DocuGen Team", email = "maintainers@docugen.org" }
+    { name = "Swayam Kiran Prabhu", email = "swayamkiranprabhu2005@gmail.com" }
+]
+maintainers = [
+    { name = "Swayam Kiran Prabhu", email = "swayamkiranprabhu2005@gmail.com" }
 ]
 keywords = ["document", "generation", "pdf", "docx", "templates", "schema", "clauses", "contracts", "invoices"]
 classifiers = [
@@ -60,6 +63,7 @@ Homepage = "https://github.com/swayamprabhu2005/DocuGen"
 Documentation = "https://github.com/swayamprabhu2005/DocuGen#readme"
 Repository = "https://github.com/swayamprabhu2005/DocuGen.git"
 Issues = "https://github.com/swayamprabhu2005/DocuGen/issues"
+"Author Profile" = "https://github.com/swayamprabhu2005"
 
 [tool.setuptools.packages.find]
 where = ["src"]
